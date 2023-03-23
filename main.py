@@ -1,17 +1,18 @@
 from tkinter import *
 from random import randint
+from math import fabs
 
 #Размер окна
-sqreen_X = 1000
-sqreen_Y = 1000
+sqreen_X = 500
+sqreen_Y = 500
 
 class Ball():
 
     def __init__(self):
-        self.R = randint(20,50)
+        self.R = randint(20,30)
         self.x = randint(10, sqreen_X-self.R)
         self.y = self.x
-        self.dx,self.dy = (randint(5,15),randint(5,15))
+        self.dx,self.dy = (randint(-10,10),randint(-10,10))
         self.ball_id = canvas.create_oval(self.x - self.R,
                                           self.y - self.R,
                                           self.x + self.R,
@@ -19,6 +20,13 @@ class Ball():
                                           fill = "green")
 
     def move(self):
+        for ball in balls:
+            if self != ball:
+                distance = fabs((pow(self.x,2)+pow(self.y,2))**(0.5)-(pow(ball.x,2)+pow(ball.y,2))**(0.5))
+                if (distance<(self.R+ball.R)):
+                    self.dx, self.dy = -self.dx, -self.dy
+                    ball.dx, ball.dy = -ball.dx, -ball.dy
+
         self.x +=self.dx
         self.y +=self.dy
 
@@ -26,16 +34,9 @@ class Ball():
            self.dx = - self.dx
         if (self.y+self.R >=sqreen_Y) or (self.y-self.R <=0):
             self.dy = - self.dy
-        step = 0
-        for ball in balls:
-            if step == 0:
-                 ball_1 = ball
-            else:
-                ball_2 = ball
-                if ((ball_1.x+ball_1.R)-(ball_2.x+ball_2.R)<0) and ((ball_1.y+ball_1.R)-(ball_2.y+ball_2.R)<0):
-                    ball_1.dx, ball_1.dy = -ball_1.dx, -ball_1.dy
-                    ball_2.dx, ball_2.dy = -ball_2.dx, -ball_2.dy
-        step += 1
+
+
+
 
 
 
