@@ -2,16 +2,18 @@ from tkinter import *
 from random import randint
 
 #Размер окна
-sqreen_X = 500
-sqreen_Y = 500
+sqreen_X = 300
+sqreen_Y = 250
 
 class Ball():
 
     def __init__(self):
-        self.R = randint(30,50)
-        self.x = randint(10, sqreen_X-self.R)
-        self.y = self.x
-        self.dx,self.dy = (randint(-1,1),1)
+        global summ
+        self.R = randint(20,30)
+        self.x = self.R + summ
+        summ += self.R + 30
+        self.y = randint(self.R, sqreen_Y-self.R)
+        self.dx,self.dy = (randint(-1,1),randint(-1,1))
         self.ball_id = canvas.create_oval(self.x - self.R,
                                           self.y - self.R,
                                           self.x + self.R,
@@ -22,9 +24,9 @@ class Ball():
         for ball in balls:
             if self != ball:
                 distance = (pow(self.x-ball.x,2)+pow(self.y-ball.y,2))**(0.5)
-                if (distance<(self.R+ball.R)):
-                    self.dx, self.dy = -self.dx, -self.dy
-                    ball.dx, ball.dy = -ball.dx, -ball.dy
+                if (distance <= (self.R+ball.R)):
+                     self.dx, self.dy = -self.dx, -self.dy
+                     ball.dx, ball.dy = -ball.dx, -ball.dy
 
         if (self.x + self.R >= sqreen_X) or (self.x - self.R <= 0):
             self.dx = - self.dx
@@ -33,13 +35,6 @@ class Ball():
 
         self.x +=self.dx
         self.y +=self.dy
-
-
-
-
-
-
-
 
     def show(self):
         canvas.move(self.ball_id, self.dx, self.dy)
@@ -61,7 +56,7 @@ def finish():
 
 # --------------------------------------------------------------
 def main():
-    global root, canvas, balls, couple
+    global root, canvas, balls, couple, summ
 
     root = Tk()
     root.geometry("300x250")
@@ -74,7 +69,9 @@ def main():
 
     # label = Label(text = "My balls")
     # label.pack(padx=50, pady=50)
-    couple = randint(2,2)
+
+    summ = 0
+    couple = randint(2,4)
     balls = [Ball() for i in range(couple)]
     tick()
 
